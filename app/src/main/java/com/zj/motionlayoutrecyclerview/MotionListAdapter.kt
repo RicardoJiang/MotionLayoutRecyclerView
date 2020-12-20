@@ -10,42 +10,70 @@ import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.recyclerview.widget.RecyclerView
 
 
-class MotionListAdapter(val context: Context, val list: ArrayList<ContactPerson>) :
+class MotionListAdapter(val context: Context, val result: ArrayList<Any>) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+    companion object {
+        private const val TYPE_CONTACT = 1
+        private const val TYPE_TITLE = 2
+    }
 
     private var mLayoutInflater: LayoutInflater = LayoutInflater.from(context)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return MotionViewHolder(
-            mLayoutInflater.inflate(
-                R.layout.motion_list_rv_item, parent, false
+        if (viewType == TYPE_CONTACT) {
+            return MotionViewHolder(
+                mLayoutInflater.inflate(
+                    R.layout.motion_list_rv_item, parent, false
+                )
             )
-        )
+        } else {
+            return TitleViewHolder(
+                mLayoutInflater.inflate(
+                    R.layout.layout_title, parent, false
+                )
+            )
+        }
     }
 
-    override fun getItemCount(): Int = list.size
+    override fun getItemCount(): Int = result.size
+
+    override fun getItemViewType(position: Int): Int {
+        return if (result[position] is ContactPerson) {
+            TYPE_CONTACT
+        } else {
+            TYPE_TITLE
+        }
+    }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val userText = holder.itemView.findViewById<TextView>(R.id.item_username)
-        val userDesc = holder.itemView.findViewById<TextView>(R.id.item_desc)
-        val userAvatar = holder.itemView.findViewById<ImageView>(R.id.item_user_avatar)
+        if (holder is MotionViewHolder) {
+            val userText = holder.itemView.findViewById<TextView>(R.id.item_username)
+            val userDesc = holder.itemView.findViewById<TextView>(R.id.item_desc)
+            val userAvatar = holder.itemView.findViewById<ImageView>(R.id.item_user_avatar)
 
-        val motionBox = holder.itemView.findViewById<MotionLayout>(R.id.motionContainer)
-        holder.itemView.setOnClickListener {
-            if (motionBox.progress == 1.0f) {
-                motionBox.transitionToStart()
-            } else if (motionBox.progress == 0.0f) {
-                motionBox.transitionToEnd()
-            }
-            for (i in 0 until itemCount) {
-                if (i != position) {
-                    notifyItemChanged(i, "collapse")
+            val motionBox = holder.itemView.findViewById<MotionLayout>(R.id.motionContainer)
+            holder.itemView.setOnClickListener {
+                if (motionBox.progress == 1.0f) {
+                    motionBox.transitionToStart()
+                } else if (motionBox.progress == 0.0f) {
+                    motionBox.transitionToEnd()
+                }
+                for (i in 0 until itemCount) {
+                    if (i != position) {
+                        notifyItemChanged(i, "collapse")
+                    }
                 }
             }
+            val item = result[position] as ContactPerson
+            userText.text = item.name
+            userDesc.text = item.desc
+            userAvatar.setImageResource(item.avatar)
+        } else if (holder is TitleViewHolder) {
+            val tvTitle = holder.itemView.findViewById<TextView>(R.id.tv_title)
+            val item = result[position] as String
+            tvTitle.text = item
         }
-        userText.text = list[position].name
-        userDesc.text = list[position].desc
-        userAvatar.setImageResource(list[position].avatar)
+
     }
 
     override fun onBindViewHolder(
@@ -56,10 +84,13 @@ class MotionListAdapter(val context: Context, val list: ArrayList<ContactPerson>
         if (payloads.isNullOrEmpty()) {
             super.onBindViewHolder(holder, position, payloads)
         } else {
-            val motionBox = holder.itemView.findViewById<MotionLayout>(R.id.motionContainer)
-            motionBox.transitionToStart()
+            if (holder is MotionViewHolder) {
+                val motionBox = holder.itemView.findViewById<MotionLayout>(R.id.motionContainer)
+                motionBox.transitionToStart()
+            }
         }
     }
 
     class MotionViewHolder(item: View) : RecyclerView.ViewHolder(item)
+    class TitleViewHolder(item: View) : RecyclerView.ViewHolder(item)
 }
