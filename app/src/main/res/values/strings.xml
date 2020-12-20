@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MotionLayoutRecyclerView</string>
+    <string name="motion_list_title">在RecyclerView中使用MotionLayout</string>
+
 </resources>
