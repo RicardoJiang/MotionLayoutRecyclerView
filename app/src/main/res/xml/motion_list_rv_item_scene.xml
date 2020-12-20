@@ -7,11 +7,10 @@
             android:id="@id/box_content"
             android:layout_width="0dp"
             android:layout_height="86dp"
-            app:layout_constraintStart_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
@@ -19,20 +18,17 @@
             android:id="@id/box_content"
             android:layout_width="0dp"
             android:layout_height="186dp"
-            app:layout_constraintStart_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </ConstraintSet>
 
     <Transition
         app:constraintSetEnd="@id/end"
         app:constraintSetStart="@+id/start"
-        app:motionInterpolator="easeInOut"
-        app:duration="500">
-        <OnClick
-            app:clickAction="toggle"
-            />
+        app:duration="500"
+        app:motionInterpolator="easeInOut">
+
     </Transition>
 </MotionScene>
