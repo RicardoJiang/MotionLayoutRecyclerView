@@ -18,6 +18,7 @@ class MotionListAdapter(val context: Context, val result: ArrayList<Any>) :
     }
 
     private var mLayoutInflater: LayoutInflater = LayoutInflater.from(context)
+    private val expandList = BooleanArray(result.size)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (viewType == TYPE_CONTACT) {
@@ -50,13 +51,20 @@ class MotionListAdapter(val context: Context, val result: ArrayList<Any>) :
             val userText = holder.itemView.findViewById<TextView>(R.id.item_username)
             val userDesc = holder.itemView.findViewById<TextView>(R.id.item_desc)
             val userAvatar = holder.itemView.findViewById<ImageView>(R.id.item_user_avatar)
-
             val motionBox = holder.itemView.findViewById<MotionLayout>(R.id.motionContainer)
+            if (expandList[position]){
+                motionBox.progress = 1.0f
+            }else{
+                motionBox.progress = 0f
+            }
+
             holder.itemView.setOnClickListener {
+                expandList.fill(false)
                 if (motionBox.progress == 1.0f) {
                     motionBox.transitionToStart()
                 } else if (motionBox.progress == 0.0f) {
                     motionBox.transitionToEnd()
+                    expandList[position] = true
                 }
                 for (i in 0 until itemCount) {
                     if (i != position) {
