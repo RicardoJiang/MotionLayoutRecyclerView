@@ -94,9 +94,18 @@ class MotionListAdapter(val context: Context, val result: ArrayList<Any>) :
         } else {
             if (holder is MotionViewHolder) {
                 val motionBox = holder.itemView.findViewById<MotionLayout>(R.id.motionContainer)
-                motionBox.transitionToStart()
+                if (payloads.get(0)=="collapse"){
+                    motionBox.transitionToStart()
+                }else{
+                    motionBox.transitionToEnd()
+                }
             }
         }
+    }
+
+    fun initExpand(position: Int){
+        expandList[position] = true
+        notifyItemChanged(position,"expand")
     }
 
     class MotionViewHolder(item: View) : RecyclerView.ViewHolder(item)
