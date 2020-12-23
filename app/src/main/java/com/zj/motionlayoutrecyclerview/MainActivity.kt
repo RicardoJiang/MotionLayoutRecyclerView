@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
         val adapter = MotionListAdapter(this, result as ArrayList<Any>)
         recyclerView.adapter = adapter
         recyclerView.post {
-            adapter.initExpand(1)
+            adapter.initExpand(12)
 
         }
     }
